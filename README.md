@@ -1,4 +1,4 @@
-# SmartLib — Run Guide
+# SmartLib : Run Guide
 
 This is a quick reference for getting both halves of SmartLib running on Windows.
 
@@ -13,17 +13,17 @@ You need both running at the same time during development.
 
 ---
 
-## 0. Prerequisites — install once
+## 0. Prerequisites : install once
 
 Install these on your machine (one-time setup):
 
-1. **Laragon Full** — https://laragon.org/download (gives you Apache + PHP 8.3 + Composer in one bundle). We use Laragon for Apache + PHP only — the database lives elsewhere (see Section 1.5).
-2. **MySQL 8.0** — https://dev.mysql.com/downloads/installer/ (Community Edition, standalone Windows installer). Pick "Server only" or "Developer Default" so the MySQL service runs on port 3306. Set a root password and remember it.
-3. **MySQL Workbench** — bundled with the MySQL installer above, or download standalone. We use it to run SQL scripts.
-4. **Node.js LTS** — https://nodejs.org (v20 or v22). Tick "Add to PATH" in the installer.
-5. **Postman** — https://www.postman.com/downloads (for testing API endpoints).
-6. **VS Code** — https://code.visualstudio.com with the Vue and PHP Intelephense extensions.
-7. **Git** — bundled with Laragon, or https://git-scm.com if you want it on system PATH.
+1. **Laragon Full** - https://laragon.org/download (gives you Apache + PHP 8.3 + Composer in one bundle). We use Laragon for Apache + PHP only, the database lives elsewhere (see Section 1.5).
+2. **MySQL 8.0** - https://dev.mysql.com/downloads/installer/ (Community Edition, standalone Windows installer). Pick "Server only" or "Developer Default" so the MySQL service runs on port 3306. Set a root password and remember it.
+3. **MySQL Workbench** - bundled with the MySQL installer above, or download standalone. We use it to run SQL scripts.
+4. **Node.js LTS** - https://nodejs.org (v20 or v22). Tick "Add to PATH" in the installer.
+5. **Postman** - https://www.postman.com/downloads (for testing API endpoints).
+6. **VS Code** - https://code.visualstudio.com with the Vue and PHP Intelephense extensions.
+7. **Git** - bundled with Laragon, or https://git-scm.com if you want it on system PATH.
 
 Verify they're installed by opening PowerShell and running:
 
@@ -44,7 +44,7 @@ If any fail, fix that before continuing.
 
 Laragon serves whatever is in `C:\laragon\www\`. The cleanest path is to point Laragon at our existing folder; the alternative is to copy. Pick **one** of the two:
 
-**Option A — symlink (recommended, keeps editing in your project folder):**
+**Option A : symlink (recommended, keeps editing in your project folder):**
 
 Open PowerShell **as Administrator**:
 
@@ -52,7 +52,7 @@ Open PowerShell **as Administrator**:
 cmd /c mklink /D "C:\laragon\www\smartlib" "D:\Software Engineering MJIIT\Cross-Section Development\Project\Cross Platform Development Project\smartlib\backend"
 ```
 
-**Option B — copy (simpler, but you have to keep both folders in sync):**
+**Option B : copy (simpler, but you have to keep both folders in sync):**
 
 ```powershell
 Copy-Item -Recurse "D:\Software Engineering MJIIT\Cross-Section Development\Project\Cross Platform Development Project\smartlib\backend" "C:\laragon\www\smartlib"
@@ -113,7 +113,7 @@ Generate a strong JWT secret with PHP (works regardless of PowerShell version):
 php -r "echo base64_encode(random_bytes(48));"
 ```
 
-Paste the output as `JWT_SECRET`. **Do not leave it as the placeholder** — the middleware will refuse to run.
+Paste the output as `JWT_SECRET`. **Do not leave it as the placeholder** the middleware will refuse to run.
 
 ### 1.5 Create and seed the database (MySQL Workbench)
 
@@ -133,7 +133,7 @@ cd "D:\…\smartlib\backend\database"
 "C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe" -u root -p smartlib < seed.sql
 ```
 
-> **Why not Laragon's MySQL?** Laragon Full ships MySQL 8.4, whose default `caching_sha2_password` auth plugin can conflict with the bundled HeidiSQL client (which uses `libmariadb.dll`). The standalone MySQL 8.0 + Workbench combination avoids the issue entirely. If you want both, set Laragon's MySQL to port `3307` to avoid clashing with the standalone server on `3306` — see troubleshooting.
+> **Why not Laragon's MySQL?** Laragon Full ships MySQL 8.4, whose default `caching_sha2_password` auth plugin can conflict with the bundled HeidiSQL client (which uses `libmariadb.dll`). The standalone MySQL 8.0 + Workbench combination avoids the issue entirely. If you want both, set Laragon's MySQL to port `3307` to avoid clashing with the standalone server on `3306` see troubleshooting.
 
 ### 1.6 Verify the backend
 
@@ -155,13 +155,13 @@ Then try:
 http://smartlib.test/api/books
 ```
 
-You should see the seeded books as JSON. **If you do — backend is working.**
+You should see the seeded books as JSON. **If you do, backend is working.**
 
 ---
 
 ## 2. Frontend setup
 
-The frontend folder stays in your project directory — no need to move it.
+The frontend folder stays in your project directory no need to move it.
 
 ### 2.1 Install Node dependencies
 
@@ -208,10 +208,10 @@ A browser tab opens automatically. You should see the SmartLib catalogue with th
 2. Log in with those credentials.
 3. Click **Borrow** on any book. A **confirmation modal** appears showing the book title and the 14-day due-date rule. Click **Confirm borrow**.
 4. A green toast slides in at the top: *"Borrowed 'Clean Code'. Check 'My Borrows' for the due date."* The available count drops by 1.
-5. Click **My Borrows** in the navbar — your borrow appears with the due date.
-6. Click **Return** — the book goes back into the catalogue with availability restored.
+5. Click **My Borrows** in the navbar, your borrow appears with the due date.
+6. Click **Return** the book goes back into the catalogue with availability restored.
 
-To test admin features, log in with the seed admin: **`admin@smartlib.test` / `password`**. The **Admin** tab appears in the navbar — you can add/edit/delete books via the modal form.
+To test admin features, log in with the seed admin: **`admin@smartlib.test` / `password`**. The **Admin** tab appears in the navbar you can add/edit/delete books via the modal form.
 
 ### Testing business rules
 - **Borrow the same book twice** → the second attempt fails with a red 409 toast: *"You already have an active borrow for this book."* By design.
@@ -223,7 +223,7 @@ To test admin features, log in with the seed admin: **`admin@smartlib.test` / `p
 ## 4. Test the API with Postman
 
 1. Open Postman → File → Import → select `postman/SmartLib.postman_collection.json`.
-2. Run **"4. Public — POST /api/members/login (Admin)"** first. Its test script auto-saves the JWT into a collection variable.
+2. Run **"4. Public POST /api/members/login (Admin)"** first. Its test script auto-saves the JWT into a collection variable.
 3. Now every other protected request will work because the variable is set.
 4. Use the Runner to fire all 12 requests in one go.
 
@@ -234,10 +234,10 @@ To test admin features, log in with the seed admin: **`admin@smartlib.test` / `p
 When you come back tomorrow:
 
 ```powershell
-# Terminal 1 — make sure Laragon is started (Apache + MySQL green)
+# Terminal 1 - make sure Laragon is started (Apache + MySQL green)
 # Nothing else to do; the API stays live.
 
-# Terminal 2 — start the Vue dev server
+# Terminal 2 - start the Vue dev server
 cd "D:\…\smartlib\frontend"
 npm run dev
 ```
@@ -293,7 +293,7 @@ smartlib/                                ← git repo root
 ├── backend/                             → goes into C:\laragon\www\smartlib (symlink or copy)
 │   ├── composer.json                    ← Slim 4, php-jwt, phpdotenv + audit ignore
 │   ├── .env.example                     ← template (commit this)
-│   ├── .env                             ← real secrets (GITIGNORED — never commit)
+│   ├── .env                             ← real secrets (GITIGNORED never commit)
 │   ├── .gitignore                       ← excludes vendor/ and .env
 │   ├── .htaccess                        ← rewrites all requests to public/index.php
 │   ├── public/
@@ -378,7 +378,7 @@ Don't panic, but act fast:
 
 ---
 
-## 9. Before demo day — pre-flight checklist
+## 9. Before demo day : pre-flight checklist
 
 Five-minute final pass before recording the demo or submitting:
 
