@@ -1,7 +1,7 @@
 # SmartLib — Technical Report
 
 **SCSM2223 Cross-Platform Application Development**
-**Polar Bear Technologies**
+**Polar Bear**
 Kai · Jeffrey Tan Zhi Yao · Qiu Jiang Yi
 Semester 2, 2025/2026
 
@@ -225,4 +225,4 @@ checklist is met within the time budget.*
 
 ---
 
-*Polar Bear Technologies — SmartLib — 2025/2026*
+*Polar Bear — SmartLib — 2025/2026*

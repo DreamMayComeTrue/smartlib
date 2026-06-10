@@ -321,4 +321,4 @@ After applying all of the above, the deck will accurately reflect the codebase a
 
 ---
 
-*Polar Bear Technologies — SmartLib — SCSM2223 — Interim Audit*
+*Polar Bear — SmartLib — SCSM2223 — Interim Audit*
