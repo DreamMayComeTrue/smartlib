@@ -17,10 +17,10 @@ You need both running at the same time during development.
 
 Install these on your machine (one-time setup):
 
-1. **Laragon Full** — https://laragon.org/download (gives you Apache + PHP 8.2 + MySQL 8 + Composer in one bundle).
-2. **Node.js LTS** — https://nodejs.org (v20 or v22). Tick "Add to PATH" in the installer.
-3. **Postman** — https://www.postman.com/downloads (for testing API endpoints).
-4. **VS Code** — https://code.visualstudio.com with the Vue and PHP Intelephense extensions.
+1. **Laragon Full** - https://laragon.org/download (gives you Apache + PHP 8.2 + MySQL 8 + Composer in one bundle).
+2. **Node.js LTS** - https://nodejs.org (v20 or v22). Tick "Add to PATH" in the installer.
+3. **Postman** - https://www.postman.com/downloads (for testing API endpoints).
+4. **VS Code** - https://code.visualstudio.com with the Vue and PHP Intelephense extensions.
 
 Verify they're installed by opening PowerShell and running:
 
@@ -80,7 +80,7 @@ DocumentRoot "C:/laragon/www/smartlib/public"
 
 Then in Laragon: **Menu → Apache → Reload**.
 
-> **Shortcut**: in Laragon, right-click the running Apache → "Auto Virtual Hosts" — it'll detect a `public/` folder automatically if you enable that option. Restart Apache after enabling.
+> **Shortcut**: in Laragon, right-click the running Apache → "Auto Virtual Hosts" it'll detect a `public/` folder automatically if you enable that option. Restart Apache after enabling.
 
 ### 1.4 Create `.env`
 
@@ -108,7 +108,7 @@ Generate a strong JWT secret with PowerShell:
 [Convert]::ToBase64String([Security.Cryptography.RandomNumberGenerator]::GetBytes(48))
 ```
 
-Paste the output as `JWT_SECRET`. **Do not leave it as the placeholder** — the middleware will refuse to run.
+Paste the output as `JWT_SECRET`. **Do not leave it as the placeholder** - the middleware will refuse to run.
 
 ### 1.5 Create and seed the database
 
@@ -151,13 +151,13 @@ Then try:
 http://smartlib.test/api/books
 ```
 
-You should see the seeded books as JSON. **If you do — backend is working.**
+You should see the seeded books as JSON. **If you do, backend is working.**
 
 ---
 
 ## 2. Frontend setup
 
-The frontend folder stays in your project directory — no need to move it.
+The frontend folder stays in your project directory, no need to move it.
 
 ### 2.1 Install Node dependencies
 
@@ -203,8 +203,8 @@ A browser tab opens automatically. You should see the SmartLib catalogue with th
 1. Click **Sign up** (top right) → create an account with any email and an 8+ char password.
 2. Log in with those credentials.
 3. Click **Borrow** on any book. You should see the available count drop by 1.
-4. Click **My Borrows** in the navbar — your borrow appears with a due date 14 days out.
-5. Click **Return** — the book reappears in the catalogue.
+4. Click **My Borrows** in the navbar - your borrow appears with a due date 14 days out.
+5. Click **Return** - the book reappears in the catalogue.
 
 To test admin features, log in with the seed admin: **`admin@smartlib.test` / `password`**. The **Admin** tab appears in the navbar — you can add/edit/delete books.
 
@@ -213,7 +213,7 @@ To test admin features, log in with the seed admin: **`admin@smartlib.test` / `p
 ## 4. Test the API with Postman
 
 1. Open Postman → File → Import → select `postman/SmartLib.postman_collection.json`.
-2. Run **"4. Public — POST /api/members/login (Admin)"** first. Its test script auto-saves the JWT into a collection variable.
+2. Run **"4. Public - POST /api/members/login (Admin)"** first. Its test script auto-saves the JWT into a collection variable.
 3. Now every other protected request will work because the variable is set.
 4. Use the Runner to fire all 12 requests in one go.
 
@@ -224,10 +224,10 @@ To test admin features, log in with the seed admin: **`admin@smartlib.test` / `p
 When you come back tomorrow:
 
 ```powershell
-# Terminal 1 — make sure Laragon is started (Apache + MySQL green)
+# Terminal 1 - make sure Laragon is started (Apache + MySQL green)
 # Nothing else to do; the API stays live.
 
-# Terminal 2 — start the Vue dev server
+# Terminal 2 - start the Vue dev server
 cd "D:\…\smartlib\frontend"
 npm run dev
 ```
@@ -248,7 +248,7 @@ Vite hot-reloads on every save. PHP changes are picked up immediately by Apache.
 | "Class 'Dotenv\\Dotenv' not found" | `composer install` was skipped | Section 1.2 |
 | `npm run dev` errors about port in use | Something else is on 5173 | Edit `vite.config.js` → change `port` |
 | Borrow returns 409 immediately | You already have an active borrow for that book (by design) | Return it first, or borrow a different one |
-| Token expired after 1 hour | By design — log in again | Adjust `JWT_TTL` in `.env` if you want longer for dev |
+| Token expired after 1 hour | By design - log in again | Adjust `JWT_TTL` in `.env` if you want longer for dev |
 
 ---
 
