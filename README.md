@@ -1,4 +1,4 @@
-# SmartLib — Run Guide
+# SmartLib : Run Guide
 
 This is a quick reference for getting both halves of SmartLib running on Windows.
 
@@ -13,7 +13,7 @@ You need both running at the same time during development.
 
 ---
 
-## 0. Prerequisites — install once
+## 0. Prerequisites : install once
 
 Install these on your machine (one-time setup):
 
@@ -41,7 +41,7 @@ If any fail, fix that before continuing.
 
 Laragon serves whatever is in `C:\laragon\www\`. The cleanest path is to point Laragon at our existing folder; the alternative is to copy. Pick **one** of the two:
 
-**Option A — symlink (recommended, keeps editing in your project folder):**
+**Option A : symlink (recommended, keeps editing in your project folder):**
 
 Open PowerShell **as Administrator**:
 
@@ -49,7 +49,7 @@ Open PowerShell **as Administrator**:
 cmd /c mklink /D "C:\laragon\www\smartlib" "D:\Software Engineering MJIIT\Cross-Section Development\Project\Cross Platform Development Project\smartlib\backend"
 ```
 
-**Option B — copy (simpler, but you have to keep both folders in sync):**
+**Option B : copy (simpler, but you have to keep both folders in sync):**
 
 ```powershell
 Copy-Item -Recurse "D:\Software Engineering MJIIT\Cross-Section Development\Project\Cross Platform Development Project\smartlib\backend" "C:\laragon\www\smartlib"
@@ -292,4 +292,4 @@ smartlib/
 
 ---
 
-*Polar Bear Technologies · SmartLib · SCSM2223 Semester 2, 2025/2026*
+*Polar Bear · SmartLib · SCSM2223 Semester 2, 2025/2026*
