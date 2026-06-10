@@ -1,0 +1,171 @@
+{
+  "info": {
+    "name": "SmartLib API",
+    "_postman_id": "smartlib-v1-collection",
+    "description": "All 10 SmartLib endpoints + a bonus borrow/me. Run 'Login (Admin)' first — it auto-saves the JWT into the {{token}} collection variable so all protected calls work.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://smartlib.test", "type": "string" },
+    { "key": "token",    "value": "",                     "type": "string" },
+    { "key": "book_id",  "value": "1",                    "type": "string" },
+    { "key": "record_id","value": "1",                    "type": "string" }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+  },
+  "item": [
+    {
+      "name": "1. Public — GET /api/books",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": { "raw": "{{base_url}}/api/books?search=", "host": ["{{base_url}}"], "path": ["api","books"], "query": [{ "key": "search", "value": "" }] },
+        "description": "List all books. Optional ?search= for title/author/category filtering."
+      }
+    },
+    {
+      "name": "2. Public — GET /api/books/{id}",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": { "raw": "{{base_url}}/api/books/{{book_id}}", "host": ["{{base_url}}"], "path": ["api","books","{{book_id}}"] }
+      }
+    },
+    {
+      "name": "3. Public — POST /api/members/register",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Demo Student\",\n  \"email\": \"demo.student@smartlib.test\",\n  \"password\": \"Demo@1234\"\n}"
+        },
+        "url": { "raw": "{{base_url}}/api/members/register", "host": ["{{base_url}}"], "path": ["api","members","register"] }
+      }
+    },
+    {
+      "name": "4. Public — POST /api/members/login (Admin)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "// Auto-save the JWT into the collection variable so every later call works",
+              "const data = pm.response.json();",
+              "if (data && data.token) {",
+              "    pm.collectionVariables.set('token', data.token);",
+              "    console.log('Token saved:', data.token.substring(0, 20) + '...');",
+              "}",
+              "pm.test('Status 200', () => pm.response.to.have.status(200));",
+              "pm.test('Returned token', () => pm.expect(data.token).to.be.a('string'));"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"admin@smartlib.test\",\n  \"password\": \"password\"\n}"
+        },
+        "url": { "raw": "{{base_url}}/api/members/login", "host": ["{{base_url}}"], "path": ["api","members","login"] },
+        "description": "Run this FIRST. The test script auto-saves the returned JWT into the {{token}} variable."
+      }
+    },
+    {
+      "name": "5. Protected — POST /api/books (Admin)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\":\"Test-Driven Development\",\n  \"author\":\"Kent Beck\",\n  \"isbn\":\"9780321146533\",\n  \"category\":\"Programming\",\n  \"stock\":3\n}"
+        },
+        "url": { "raw": "{{base_url}}/api/books", "host": ["{{base_url}}"], "path": ["api","books"] }
+      }
+    },
+    {
+      "name": "6. Protected — PUT /api/books/{id} (Admin)",
+      "request": {
+        "method": "PUT",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\":\"Clean Code (2nd ed.)\",\n  \"author\":\"Robert C. Martin\",\n  \"stock\":5\n}"
+        },
+        "url": { "raw": "{{base_url}}/api/books/{{book_id}}", "host": ["{{base_url}}"], "path": ["api","books","{{book_id}}"] }
+      }
+    },
+    {
+      "name": "7. Protected — DELETE /api/books/{id} (Admin)",
+      "request": {
+        "method": "DELETE",
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+        "url": { "raw": "{{base_url}}/api/books/{{book_id}}", "host": ["{{base_url}}"], "path": ["api","books","{{book_id}}"] }
+      }
+    },
+    {
+      "name": "8. Protected — POST /api/borrow",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const data = pm.response.json();",
+              "if (data && data.record_id) {",
+              "    pm.collectionVariables.set('record_id', data.record_id);",
+              "}"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"book_id\": {{book_id}}\n}"
+        },
+        "url": { "raw": "{{base_url}}/api/borrow", "host": ["{{base_url}}"], "path": ["api","borrow"] }
+      }
+    },
+    {
+      "name": "9. Protected — POST /api/return/{id}",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+        "url": { "raw": "{{base_url}}/api/return/{{record_id}}", "host": ["{{base_url}}"], "path": ["api","return","{{record_id}}"] }
+      }
+    },
+    {
+      "name": "10. Protected — GET /api/members (Admin)",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+        "url": { "raw": "{{base_url}}/api/members", "host": ["{{base_url}}"], "path": ["api","members"] }
+      }
+    },
+    {
+      "name": "Bonus — GET /api/borrow/me",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+        "url": { "raw": "{{base_url}}/api/borrow/me", "host": ["{{base_url}}"], "path": ["api","borrow","me"] }
+      }
+    }
+  ]
+}

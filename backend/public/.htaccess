@@ -1,0 +1,14 @@
+# SmartLib API — URL rewriting for Slim 4
+# All requests that don't match an existing file or directory are forwarded
+# to index.php so Slim's router can handle them.
+
+RewriteEngine On
+
+# Pass the Authorization header through to PHP (required for JWT)
+RewriteCond %{HTTP:Authorization} ^(.+)$
+RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+# Forward everything that isn't a real file/dir to index.php
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.php [QSA,L]

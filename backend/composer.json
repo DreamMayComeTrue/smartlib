@@ -1,0 +1,26 @@
+{
+  "name": "polarbear/smartlib",
+  "description": "SmartLib — Cross-Platform Library Management System (Backend API)",
+  "type": "project",
+  "license": "MIT",
+  "require": {
+    "php": "^8.1",
+    "slim/slim": "4.*",
+    "slim/psr7": "^1.6",
+    "firebase/php-jwt": "^6.10",
+    "vlucas/phpdotenv": "^5.6"
+  },
+  "autoload": {
+    "psr-4": {
+      "SmartLib\\": "src/"
+    }
+  },
+  "config": {
+    "sort-packages": true,
+    "audit": {
+      "ignore": {
+        "PKSA-y2cr-5h3j-g3ys": "Known issue in firebase/php-jwt 6.10–6.11. No fixed release yet (checked May 2026). Acknowledged for the SmartLib coursework — discussed in the security audit log."
+      }
+    }
+  }
+}
