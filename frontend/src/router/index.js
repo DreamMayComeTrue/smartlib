@@ -36,6 +36,11 @@ const routes = [
     component: () => import('@/views/AdminView.vue'),
     meta: { title: 'Admin', requiresAuth: true, requiresAdmin: true }
   },
+  {
+    path: '/account',
+    component: () => import('@/views/ChangePasswordView.vue'),
+    meta: { title: 'Change password', requiresAuth: true }
+  },
   // Catch-all → home
   { path: '/:pathMatch(.*)*', redirect: '/' }
 ]

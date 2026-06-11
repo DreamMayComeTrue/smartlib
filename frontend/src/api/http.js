@@ -12,6 +12,7 @@
 
 import axios from 'axios'
 import router from '@/router'
+import { token, logout } from '@/api/auth'
 
 const http = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || 'http://smartlib.test',
@@ -21,9 +22,8 @@ const http = axios.create({
 
 // Attach the JWT (if any) to every outgoing request
 http.interceptors.request.use(config => {
-  const token = localStorage.getItem('token')
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`
+  if (token.value) {
+    config.headers.Authorization = `Bearer ${token.value}`
   }
   return config
 })
@@ -33,8 +33,9 @@ http.interceptors.response.use(
   res => res,
   err => {
     if (err.response?.status === 401) {
-      localStorage.removeItem('token')
-      localStorage.removeItem('user')
+      // Clears the reactive auth state AND localStorage in one step,
+      // so the navbar instantly reflects the logged-out state.
+      logout()
       // Avoid redirect loops if we're already on /login
       if (router.currentRoute.value.path !== '/login') {
         router.push('/login')

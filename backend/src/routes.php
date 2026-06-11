@@ -388,6 +388,54 @@ $app->get('/api/members', function (Request $rq, Response $rs) use ($pdo): Respo
 })->add(new JwtMiddleware('admin'));
 
 // =========================================================================
+// POST /api/members/password — logged-in user changes their own password.
+//
+// Requires:
+//   - Valid JWT (any role)
+//   - current_password matches the stored bcrypt hash
+//   - new_password is at least 8 chars and different from current
+// =========================================================================
+$app->post('/api/members/password', function (Request $rq, Response $rs) use ($pdo): Response {
+    $userId  = (int) $rq->getAttribute('user_id');
+    $body    = $rq->getParsedBody() ?? [];
+    $current = (string) ($body['current_password'] ?? '');
+    $new     = (string) ($body['new_password']     ?? '');
+
+    if ($current === '' || $new === '') {
+        return jsonError($rs, 'Both current_password and new_password are required', 400);
+    }
+    if (strlen($new) < 8) {
+        return jsonError($rs, 'New password must be at least 8 characters', 400);
+    }
+    if ($current === $new) {
+        return jsonError($rs, 'New password must be different from the current one', 400);
+    }
+
+    $stmt = $pdo->prepare('SELECT id, password_hash FROM members WHERE id = ?');
+    $stmt->execute([$userId]);
+    $member = $stmt->fetch();
+
+    if (!$member) {
+        return jsonError($rs, 'Account not found', 404);
+    }
+
+    // Constant-time check — protects against timing attacks.
+    if (!password_verify($current, $member['password_hash'])) {
+        return jsonError($rs, 'Current password is incorrect', 401);
+    }
+
+    $newHash = password_hash($new, PASSWORD_BCRYPT);
+    $stmt = $pdo->prepare('UPDATE members SET password_hash = ? WHERE id = ?');
+    $stmt->execute([$newHash, $userId]);
+
+    // NOTE: existing JWTs are still valid until they expire (stateless tokens).
+    // For a real production system you would add a token-blacklist or
+    // "password_changed_at" timestamp to invalidate older tokens. For this
+    // course project we accept the trade-off — documented in the security log.
+    return jsonSuccess($rs, ['message' => 'Password updated successfully']);
+})->add(new JwtMiddleware());
+
+// =========================================================================
 // Bonus: GET /api/borrow/me — list current user's borrow history (handy for ReturnView)
 // =========================================================================
 $app->get('/api/borrow/me', function (Request $rq, Response $rs) use ($pdo): Response {

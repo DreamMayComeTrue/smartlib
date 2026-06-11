@@ -15,7 +15,7 @@
 
       <div class="nav-auth">
         <template v-if="user">
-          <span class="user-name">{{ user.name }}</span>
+          <RouterLink to="/account" class="user-name" title="Change password">{{ user.name }}</RouterLink>
           <button class="btn btn-ghost" @click="logout">Log out</button>
         </template>
         <template v-else>
@@ -38,22 +38,13 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
 import { useRouter, RouterLink, RouterView } from 'vue-router'
+import { user, logout as clearAuth } from '@/api/auth'
 
 const router = useRouter()
 
-const user = computed(() => {
-  try {
-    return JSON.parse(localStorage.getItem('user') || 'null')
-  } catch {
-    return null
-  }
-})
-
 function logout () {
-  localStorage.removeItem('token')
-  localStorage.removeItem('user')
+  clearAuth()
   router.push('/login')
 }
 </script>
@@ -116,6 +107,14 @@ function logout () {
 .user-name {
   color: var(--text-muted);
   font-size: 0.9rem;
+  text-decoration: none;
+  padding: 0.3rem 0.5rem;
+  border-radius: var(--radius);
+  transition: background 0.15s, color 0.15s;
+}
+.user-name:hover {
+  background: var(--surface-muted);
+  color: var(--text);
 }
 
 .app-main {

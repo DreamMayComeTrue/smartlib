@@ -56,6 +56,7 @@
 import { ref } from 'vue'
 import { useRouter, useRoute, RouterLink } from 'vue-router'
 import http from '@/api/http'
+import { login as setAuth } from '@/api/auth'
 
 const router = useRouter()
 const route  = useRoute()
@@ -73,8 +74,9 @@ async function login () {
       email:    email.value,
       password: password.value
     })
-    localStorage.setItem('token', data.token)
-    localStorage.setItem('user',  JSON.stringify(data.user))
+    // Use the shared auth module — updates the reactive ref AND localStorage
+    // in one step, so the navbar updates instantly without a page reload.
+    setAuth(data.user, data.token)
     router.push(route.query.redirect || '/')
   } catch (err) {
     error.value = err.response?.data?.message ?? 'Login failed. Please try again.'
