@@ -83,7 +83,7 @@ DocumentRoot "C:/laragon/www/smartlib/public"
 
 Then in Laragon: **Menu → Apache → Reload**.
 
-> **Shortcut**: in Laragon, right-click the running Apache → "Auto Virtual Hosts" — it'll detect a `public/` folder automatically if you enable that option. Restart Apache after enabling.
+> **Shortcut**: in Laragon, right-click the running Apache → "Auto Virtual Hosts" it'll detect a `public/` folder automatically if you enable that option. Restart Apache after enabling.
 
 ### 1.4 Create `.env`
 
@@ -121,7 +121,7 @@ We use the **standalone MySQL 8.0** server (installed in Section 0), **not** Lar
 
 1. Open **MySQL Workbench** → click the **"Local instance MySQL80"** tile → enter your root password.
 2. Open `backend/database/schema.sql` (File → Open SQL Script).
-3. Click the **⚡ lightning bolt** (Execute) — this creates the `smartlib` database AND the three tables (`books`, `members`, `borrow_records`). The `DROP TABLE` warnings are harmless on first run.
+3. Click the **⚡ lightning bolt** (Execute) - this creates the `smartlib` database AND the three tables (`books`, `members`, `borrow_records`). The `DROP TABLE` warnings are harmless on first run.
 4. Repeat for `backend/database/seed.sql`. The file starts with `SET SQL_SAFE_UPDATES = 0;` so Workbench's safe-update mode won't block the `DELETE` statements.
 5. Refresh the **SCHEMAS** panel on the left → expand `smartlib` → you should see `books` (12 rows), `members` (4 rows), `borrow_records` (0 rows).
 
@@ -265,7 +265,7 @@ Vite hot-reloads on every save. PHP changes are picked up immediately by Apache.
 | `/api/books` returns "Access denied for user 'root'@'localhost' (using password: YES/NO)" | `.env` `DB_HOST=localhost` is hitting a different MySQL user than expected (named-pipe socket vs TCP) | Set `DB_HOST=127.0.0.1` in `.env` to force TCP |
 | HeidiSQL "Access denied" even with correct password | MySQL 8.4 `caching_sha2_password` conflict with libmariadb.dll | Use MySQL Workbench instead, or downgrade Laragon's MySQL to 8.0/MariaDB. See Section 1.5 |
 | Two MySQL servers fighting for port 3306 | Standalone MySQL + Laragon's MySQL both trying to bind 3306 | Either disable Laragon's MySQL (Menu → MySQL → Stop), or move Laragon's MySQL to port 3307 (edit `my.ini`) |
-| `seed.sql` fails with "Error 1175: safe update mode" | MySQL Workbench's safe-update guard | The file now starts with `SET SQL_SAFE_UPDATES = 0;` — re-open it in Workbench and run again |
+| `seed.sql` fails with "Error 1175: safe update mode" | MySQL Workbench's safe-update guard | The file now starts with `SET SQL_SAFE_UPDATES = 0;` - re-open it in Workbench and run again |
 | `/api/books` returns "could not find driver" | PHP's `pdo_mysql` extension disabled | Laragon menu → PHP → Extensions → tick `pdo_mysql` → restart Apache |
 | Login returns 401 with correct password | Seed hashes rotated but `seed.sql` not re-run | Re-run `seed.sql`, or update the hash with `php tools/hash_password.php yourpassword` |
 
@@ -274,11 +274,11 @@ Vite hot-reloads on every save. PHP changes are picked up immediately by Apache.
 | Symptom | Likely cause | Fix |
 |---------|--------------|-----|
 | `/api/books` returns `{"status":"error","message":"Internal server error"}` | Slim caught an exception but `APP_DEBUG=false` hides details | Set `APP_DEBUG=true` in `.env` temporarily to see the real error. **Set back to `false` before demo/submission!** |
-| Borrow click does nothing visible | Toast was rendering below the fold | Already fixed — toast now `position: fixed` at the top |
+| Borrow click does nothing visible | Toast was rendering below the fold | Already fixed - toast now `position: fixed` at the top |
 | Vue page blank, console says "CORS" | `CORS_ORIGIN` in backend `.env` doesn't match the Vite port | Set `CORS_ORIGIN=http://localhost:5173`, restart Apache |
 | `npm run dev` errors about port in use | Something else is on 5173 | `npm run dev -- --port 5174` and update `CORS_ORIGIN` accordingly |
 | Borrow returns 409 immediately | You already have an active borrow for that book (by design) | Return it first, or borrow a different one |
-| Token expired after 1 hour | By design — log in again | Adjust `JWT_TTL` in `.env` if you want longer for dev (e.g. `JWT_TTL=86400` for 24 hours) |
+| Token expired after 1 hour | By design - log in again | Adjust `JWT_TTL` in `.env` if you want longer for dev (e.g. `JWT_TTL=86400` for 24 hours) |
 | `Method not allowed. Must be one of: OPTIONS` | DocumentRoot still points at project root, so Slim sees `/public/api/books` instead of `/api/books` | Section 6 → "directory listing" row above |
 
 ---
@@ -359,10 +359,10 @@ git push
 ```
 
 ### Things that must NEVER be committed
-- `backend/.env` — contains `JWT_SECRET` and DB password
-- `backend/vendor/` — Composer dependencies (regenerate with `composer install`)
-- `frontend/node_modules/` — npm dependencies (regenerate with `npm install`)
-- `frontend/dist/` — production build output (regenerate with `npm run build`)
+- `backend/.env` - contains `JWT_SECRET` and DB password
+- `backend/vendor/` - Composer dependencies (regenerate with `composer install`)
+- `frontend/node_modules/` - npm dependencies (regenerate with `npm install`)
+- `frontend/dist/` - production build output (regenerate with `npm run build`)
 - Any `.env` / `.env.local` / `*.pem` / `*.key` file
 
 All of these are excluded by the root `.gitignore` plus per-folder `.gitignore` files. Run `git check-ignore -v <filename>` to confirm a specific file is excluded.
@@ -378,21 +378,6 @@ Don't panic, but act fast:
 
 ---
 
-## 9. Before demo day : pre-flight checklist
 
-Five-minute final pass before recording the demo or submitting:
-
-- [ ] `backend/.env` has `APP_DEBUG=false` (or the line is removed)
-- [ ] `JWT_SECRET` in `.env` is a real long random string, not the placeholder
-- [ ] Seed account passwords rotated from `"password"` to something stronger (use `php tools/hash_password.php Admin@1234`, paste new hash into `seed.sql`, re-run `seed.sql`)
-- [ ] Apache + MySQL are both running
-- [ ] `npm run dev` is running in a terminal
-- [ ] Borrow → My Borrows → Return flow works end-to-end
-- [ ] Admin add/edit/delete works
-- [ ] Postman collection runs all green (Runner → Run Collection)
-- [ ] `git status` is clean — nothing uncommitted
-- [ ] GitHub repo page loads and shows latest commit
-
----
 
 *Polar Bear · SmartLib · SCSM2223 Semester 2, 2025/2026*
